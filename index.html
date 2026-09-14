@@ -1,0 +1,991 @@
+<!DOCTYPE html>
+<html lang="ta">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Vijay Connect - Cab Booking Service</title>
+  <!-- Google Fonts & Font Awesome Icons -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+  <style>
+    /* ==================== GLOBAL STYLES ==================== */
+    :root {
+      --primary-color: #93066f;     /* Red Taxi style Vibrant Red */
+      --primary-dark: #36043c;
+      --secondary-color: #ff9800;   /* Accent Amber */
+      --text-dark: #222222;
+      --text-muted: #666666;
+      --bg-light: #ffffff;
+      --surface-color: #f8f9fa;
+      --card-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+      --transition: all 0.4s ease;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Poppins', sans-serif;
+    }
+
+    body {
+      background-color: var(--bg-light);
+      color: var(--text-dark);
+      overflow-x: hidden;
+    }
+
+    a {
+      text-decoration: none;
+      color: inherit;
+    }
+
+    /* ==================== HEADER & NAVBAR ==================== */
+    header {
+      position: sticky;
+      top: 0;
+      background: #ffffff;
+      box-shadow: 0 2px 15px rgba(0, 0, 0, 0.08);
+      z-index: 1000;
+    }
+
+    .navbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: 12px 24px;
+    }
+
+    /* Logo Styling based on uploaded image */
+    .logo-container {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .logo-icon {
+      width: 48px;
+      height: 48px;
+      display: block;
+      object-fit: contain;
+      box-shadow: 0 0 10px rgba(211, 47, 47, 0.3);
+    }
+
+    .logo-text {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--primary-color);
+      letter-spacing: -0.5px;
+    }
+
+    .logo-text span {
+      color: #111111;
+    }
+
+    .nav-links {
+      display: flex;
+      list-style: none;
+      gap: 25px;
+      align-items: center;
+    }
+
+    .nav-links a {
+      font-weight: 500;
+      font-size: 0.95rem;
+      color: var(--text-dark);
+      transition: var(--transition);
+      padding: 6px 0;
+      position: relative;
+    }
+
+    .nav-links a:hover, .nav-links a.active {
+      color: var(--primary-color);
+    }
+
+    .btn-download {
+      background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
+      color: #fff;
+      padding: 10px 22px;
+      border-radius: 30px;
+      font-weight: 600;
+      font-size: 0.9rem;
+      box-shadow: 0 4px 12px rgba(211, 47, 47, 0.3);
+      transition: var(--transition);
+    }
+
+    .btn-download:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 16px rgba(211, 47, 47, 0.4);
+    }
+
+    /* ==================== HERO SLIDER (2-SEC AUTO CHANGE) ==================== */
+    .hero-section {
+      position: relative;
+      width: 100%;
+      height: 480px;
+      background: #111;
+      overflow: hidden;
+    }
+
+    .slider-wrapper {
+      position: relative;
+      width: 100%;
+      height: 100%;
+    }
+
+    .slide {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 0.8s ease-in-out, transform 1s ease-in-out;
+      transform: scale(1.05);
+    }
+
+    .slide.active {
+      opacity: 1;
+      visibility: visible;
+      transform: scale(1);
+    }
+
+    .slide-img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      filter: brightness(0.7);
+    }
+
+    /* Diagonal Overlay Graphic (Red Taxi Theme) */
+    .slide-overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 55%;
+      height: 100%;
+      background: linear-gradient(115deg, rgba(152, 45, 222, 0.92) 0%, rgba(60, 7, 100, 0.85) 60%, transparent 100%);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: 0 5%;
+      color: #ffffff;
+      clip-path: polygon(0 0, 100% 0, 80% 100%, 0 100%);
+      z-index: 2;
+    }
+
+    .slide-badge {
+      background: rgba(255, 255, 255, 0.2);
+      padding: 6px 14px;
+      border-radius: 20px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      width: fit-content;
+      margin-bottom: 12px;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      backdrop-filter: blur(5px);
+    }
+
+    .slide-title {
+      font-size: 2.3rem;
+      font-weight: 700;
+      line-height: 1.2;
+      margin-bottom: 12px;
+      text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+    }
+
+    .slide-notes {
+      font-size: 1.05rem;
+      color: #f0f0f0;
+      margin-bottom: 24px;
+      max-width: 450px;
+      line-height: 1.5;
+    }
+
+    .slide-counter {
+      position: absolute;
+      bottom: 20px;
+      right: 30px;
+      background: rgba(0,0,0,0.6);
+      color: white;
+      padding: 6px 16px;
+      border-radius: 20px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      z-index: 10;
+      backdrop-filter: blur(4px);
+    }
+
+    /* Slider Navigation Dots & Controls */
+    .slider-dots {
+      position: absolute;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      gap: 8px;
+      z-index: 10;
+    }
+
+    .dot {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.5);
+      cursor: pointer;
+      transition: var(--transition);
+    }
+
+    .dot.active {
+      background: var(--primary-color);
+      width: 30px;
+      border-radius: 6px;
+    }
+
+    /* Progress bar for 2 sec timer */
+    .timer-bar {
+      position: absolute;
+      top: 0;
+      left: 0;
+      height: 4px;
+      background: var(--secondary-color);
+      width: 0%;
+      z-index: 20;
+    }
+
+    /* ==================== QUICK BOOKING & CATEGORIES ==================== */
+    .section-container {
+      max-width: 1280px;
+      margin: 50px auto;
+      padding: 0 24px;
+    }
+
+    .section-title {
+      text-align: center;
+      margin-bottom: 35px;
+    }
+
+    .section-title h2 {
+      font-size: 2rem;
+      color: var(--text-dark);
+      font-weight: 700;
+    }
+
+    .section-title p {
+      color: var(--text-muted);
+      margin-top: 6px;
+    }
+
+    .cab-types-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 25px;
+    }
+
+    .cab-card {
+      background: #ffffff;
+      border-radius: 16px;
+      padding: 24px;
+      box-shadow: var(--card-shadow);
+      border: 1px solid #eee;
+      text-align: center;
+      transition: var(--transition);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .cab-card:hover {
+      transform: translateY(-8px);
+      box-shadow: 0 15px 35px rgba(211, 47, 47, 0.12);
+      border-color: rgba(211, 47, 47, 0.3);
+    }
+
+    .cab-icon {
+      font-size: 2.8rem;
+      color: var(--primary-color);
+      margin-bottom: 15px;
+    }
+
+    .cab-card h3 {
+      font-size: 1.25rem;
+      margin-bottom: 10px;
+      color: #111;
+    }
+
+    .cab-card p {
+      font-size: 0.9rem;
+      color: var(--text-muted);
+      margin-bottom: 20px;
+      line-height: 1.5;
+    }
+
+    .btn-book {
+      display: inline-block;
+      width: 100%;
+      padding: 10px 0;
+      background: #f4f4f4;
+      color: var(--text-dark);
+      border-radius: 8px;
+      font-weight: 600;
+      font-size: 0.9rem;
+      transition: var(--transition);
+    }
+
+    .cab-card:hover .btn-book {
+      background: var(--primary-color);
+      color: #fff;
+    }
+
+    /* ==================== FARES & DESTINATIONS ==================== */
+    .fare-container {
+      background: var(--surface-color);
+      border-radius: 20px;
+      padding: 35px;
+      margin-top: 40px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 30px;
+      align-items: center;
+    }
+
+    .fare-info h3 {
+      font-size: 1.8rem;
+      margin-bottom: 15px;
+      color: var(--primary-dark);
+    }
+
+    .fare-info p {
+      color: var(--text-muted);
+      line-height: 1.6;
+      margin-bottom: 20px;
+    }
+
+    .fare-table {
+      width: 100%;
+      background: #fff;
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+    }
+
+    .fare-table th, .fare-table td {
+      padding: 14px 20px;
+      text-align: left;
+      font-size: 0.95rem;
+    }
+
+    .fare-table th {
+      background: var(--primary-color);
+      color: white;
+      font-weight: 600;
+    }
+
+    .fare-table tr:nth-child(even) {
+      background-color: #f9f9f9;
+    }
+
+    .price-tag {
+      font-weight: 700;
+      color: var(--primary-color);
+    }
+
+    /* ==================== CHENNAI DESTINATIONS & BOOKING ==================== */
+    .destination-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 25px;
+    }
+
+    .destination-card {
+      background: #ffffff;
+      border-radius: 16px;
+      overflow: hidden;
+      box-shadow: var(--card-shadow);
+      border: 1px solid #eee;
+      transition: var(--transition);
+    }
+
+    .destination-card:hover {
+      transform: translateY(-8px);
+      box-shadow: 0 15px 35px rgba(211, 47, 47, 0.12);
+    }
+
+    .destination-image {
+      width: 100%;
+      height: 175px;
+      object-fit: cover;
+      display: block;
+    }
+
+    .destination-content { padding: 20px; }
+    .destination-content h3 { margin-bottom: 8px; color: #111; }
+    .destination-content p { color: var(--text-muted); font-size: 0.9rem; line-height: 1.5; min-height: 68px; margin-bottom: 15px; }
+    .destination-content .btn-book { background: var(--primary-color); color: #fff; text-align: center; cursor: pointer; border: 0; }
+
+    .booking-panel {
+      background: var(--surface-color);
+      border-radius: 20px;
+      padding: 35px;
+      box-shadow: var(--card-shadow);
+    }
+
+    .booking-form {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 18px;
+    }
+
+    .form-field { display: flex; flex-direction: column; gap: 7px; }
+    .form-field.full-width { grid-column: 1 / -1; }
+    .form-field label { font-size: 0.9rem; font-weight: 600; }
+    .form-field input, .form-field select, .form-field textarea { width: 100%; border: 1px solid #ddd; border-radius: 8px; padding: 12px 13px; font: inherit; background: #fff; color: var(--text-dark); }
+    .form-field textarea { min-height: 95px; resize: vertical; }
+    .booking-submit { border: 0; cursor: pointer; grid-column: 1 / -1; }
+    .form-status { grid-column: 1 / -1; color: var(--primary-dark); font-size: 0.9rem; }
+
+    .footer-logo { width: 150px; height: auto; object-fit: contain; display: block; margin-bottom: 15px; }
+
+    /* ==================== FOOTER ==================== */
+    footer {
+      background: #151515;
+      color: #aaaaaa;
+      padding: 60px 0 20px;
+      margin-top: 80px;
+    }
+
+    .footer-content {
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: 0 24px;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 40px;
+    }
+
+    .footer-col h4 {
+      color: #ffffff;
+      font-size: 1.1rem;
+      margin-bottom: 20px;
+      position: relative;
+    }
+
+    .footer-col h4::after {
+      content: '';
+      position: absolute;
+      left: 0;
+      bottom: -6px;
+      width: 35px;
+      height: 3px;
+      background: var(--primary-color);
+    }
+
+    .footer-col ul {
+      list-style: none;
+    }
+
+    .footer-col ul li {
+      margin-bottom: 10px;
+    }
+
+    .footer-col ul li a {
+      font-size: 0.9rem;
+      transition: var(--transition);
+    }
+
+    .footer-col ul li a:hover {
+      color: var(--primary-color);
+      padding-left: 5px;
+    }
+
+    .copyright {
+      text-align: center;
+      border-top: 1px solid #252525;
+      margin-top: 40px;
+      padding-top: 20px;
+      font-size: 0.85rem;
+    }
+
+    /* Responsive adjustments */
+    @media (max-width: 768px) {
+      .nav-links { display: none; }
+      .slide-overlay { width: 85%; clip-path: none; background: rgba(0,0,0,0.7); }
+      .fare-container { grid-template-columns: 1fr; }
+      .booking-form { grid-template-columns: 1fr; }
+      .form-field.full-width, .booking-submit, .form-status { grid-column: auto; }
+      .booking-panel { padding: 24px; }
+      .hero-section { height: 380px; }
+      .slide-title { font-size: 1.6rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ==================== HEADER / NAVBAR ==================== -->
+  <header>
+    <nav class="navbar">
+      <div class="logo-container">
+        <img class="logo-icon" src="C:\Users\navan\OneDrive\Pictures\vijay-img.png" alt="Vijay Connect logo">
+        <div class="logo-text">Vijay <span>Connect</span></div>
+      </div>
+
+      <ul class="nav-links">
+        <li><a href="#" class="active">Home</a></li>
+        <li><a href="#about">About Us</a></li>
+        <li><a href="#cabs">Cabs</a></li>
+        <li><a href="#destinations">Chennai Destinations</a></li>
+        <li><a href="#fares">Fares</a></li>
+        <li><a href="#booking">Book Taxi</a></li>
+      </ul>
+
+      <a href="tel:04224567890" class="btn-download">
+        <i class="fa-solid fa-phone"></i> Book Ride
+      </a>
+    </nav>
+  </header>
+
+  <!-- ==================== TOP HERO CAROUSEL (10 SLIDES - 2 SEC INTERVAL) ==================== -->
+  <section class="hero-section">
+    <div class="timer-bar" id="timerBar"></div>
+    <div class="slider-wrapper" id="sliderWrapper">
+      <!-- Slides will be rendered automatically via JavaScript -->
+    </div>
+
+    <!-- Dots Pagination -->
+    <div class="slider-dots" id="sliderDots"></div>
+    <div class="slide-counter" id="slideCounter">1 / 10</div>
+  </section>
+
+  <!-- ==================== QUICK SERVICES & CAB CATEGORIES ==================== -->
+  <section class="section-container" id="cabs">
+    <div class="section-title">
+      <h2>Reach Us, We Are Here to Help You</h2>
+      <p>Hassle-Free Bookings. On-Time Pick-Up. Reliable Rides for Every Need.</p>
+    </div>
+
+    <div class="cab-types-grid">
+      <div class="cab-card">
+        <i class="fa-solid fa-car cab-icon"></i>
+        <h3>City Cab Booking</h3>
+        <p>Quick rides within the city with economical hatchbacks & comfortable sedans.</p>
+        <a href="#" class="btn-book">Book Now</a>
+      </div>
+
+      <div class="cab-card">
+        <i class="fa-solid fa-route cab-icon"></i>
+        <h3>Outstation Cabs</h3>
+        <p>Safe outstation trips to top tourist spots with experienced professional drivers.</p>
+        <a href="#" class="btn-book">Book Now</a>
+      </div>
+
+      <div class="cab-card">
+        <i class="fa-solid fa-plane-departure cab-icon"></i>
+        <h3>Airport Transfers</h3>
+        <p>Punctual airport pick-ups and drop-offs with guaranteed zero delay.</p>
+        <a href="#" class="btn-book">Book Now</a>
+      </div>
+
+      <div class="cab-card">
+        <i class="fa-solid fa-car-side cab-icon"></i>
+        <h3>Premium Cab Service</h3>
+        <p>Spacious, well-maintained cabs for business travel, events, and special occasions.</p>
+        <a href="#booking" class="btn-book">Book Now</a>
+      </div>
+    </div>
+  </section>
+
+  <section class="section-container" id="destinations">
+    <div class="section-title">
+      <h2>Chennai Taxi Destinations</h2>
+      <p>Comfortable Vijay Connect cab rides to the places Chennai loves most.</p>
+    </div>
+    <div class="destination-grid" id="destinationGrid"></div>
+  </section>
+
+  <section class="section-container" id="booking">
+    <div class="section-title">
+      <h2>Book Your Chennai Taxi</h2>
+      <p>Share your trip details and send your request directly to Vijay Connect on WhatsApp.</p>
+    </div>
+    <div class="booking-panel">
+      <form class="booking-form" id="bookingForm">
+        <div class="form-field"><label for="customerName">Customer Name</label><input id="customerName" name="customerName" required></div>
+        <div class="form-field"><label for="mobileNumber">Mobile Number</label><input id="mobileNumber" name="mobileNumber" type="tel" pattern="[6-9][0-9]{9}" maxlength="10" required></div>
+        <div class="form-field"><label for="pickupLocation">Pickup Location</label><input id="pickupLocation" name="pickupLocation" required></div>
+        <div class="form-field"><label for="destination">Destination</label><input id="destination" name="destination" required></div>
+        <div class="form-field"><label for="travelDate">Travel Date</label><input id="travelDate" name="travelDate" type="date" required></div>
+        <div class="form-field"><label for="travelTime">Travel Time</label><input id="travelTime" name="travelTime" type="time" required></div>
+        <div class="form-field"><label for="passengers">Number of Passengers</label><input id="passengers" name="passengers" type="number" min="1" max="12" value="1" required></div>
+        <div class="form-field"><label for="taxiType">Taxi Type</label><select id="taxiType" name="taxiType" required><option value="Sedan">Sedan</option><option value="SUV">SUV</option><option value="Premium Cab">Premium Cab</option></select></div>
+        <div class="form-field full-width"><label for="additionalMessage">Additional Message</label><textarea id="additionalMessage" name="additionalMessage" placeholder="Optional pickup notes or travel requirements"></textarea></div>
+        <button class="btn-download booking-submit" type="submit"><i class="fa-brands fa-whatsapp"></i> Book Now</button>
+        <p class="form-status" id="formStatus" role="status"></p>
+      </form>
+    </div>
+  </section>
+
+  <!-- ==================== FARES & POPULAR ROUTES ==================== -->
+  <section class="section-container" id="fares">
+    <div class="section-title">
+      <h2>Popular Outstation Trip Fares</h2>
+      <p>Transparent pricing with no hidden charges for your peaceful travel.</p>
+    </div>
+
+    <div class="fare-container">
+      <div class="fare-info">
+        <h3>Vijay Connect Outstation Special</h3>
+        <p>Whether you require an airport transfer, railway station drop, or a scenic outstation trip to Ooty, Munnar, or Kodaikanal, Vijay Connect promises prompt, reliable, and professional service every time.</p>
+        <ul style="list-style: none; line-height: 2;">
+          <li><i class="fa-solid fa-check-circle" style="color: var(--primary-color);"></i> Clean & sanitized cabs</li>
+          <li><i class="fa-solid fa-check-circle" style="color: var(--primary-color);"></i> 24/7 customer support</li>
+          <li><i class="fa-solid fa-check-circle" style="color: var(--primary-color);"></i> Experienced local drivers</li>
+        </ul>
+      </div>
+
+      <table class="fare-table">
+    <thead>
+        <tr>
+            <th>Destination</th>
+            <th>Distance / Duration</th>
+            <th>Starting Fare</th>
+        </tr>
+    </thead>
+
+    <tbody>
+        <tr>
+            <td>Chennai to Ooty / Coonoor</td>
+            <td>550 Kms | 12 Hrs</td>
+            <td>Rs. 4,525/-</td>
+        </tr>
+
+        <tr>
+            <td>Chennai to Munnar</td>
+            <td>600 Kms | 13 Hrs</td>
+            <td>Rs. 6,375/-</td>
+        </tr>
+
+        <tr>
+            <td>Chennai to Kodaikanal</td>
+            <td>520 Kms | 11 Hrs</td>
+            <td>Rs. 6,375/-</td>
+        </tr>
+
+        <tr>
+            <td>Chennai to Isha Yoga Center</td>
+            <td>500 Kms | 10 Hrs</td>
+            <td>Rs. 1,795/-</td>
+        </tr>
+
+        <tr>
+            <td>Chennai to Aliyar Dam</td>
+            <td>520 Kms | 11 Hrs</td>
+            <td>Rs. 2,665/-</td>
+        </tr>
+    </tbody>
+</table>
+    </div>
+  </section>
+
+  <!-- ==================== FOOTER ==================== -->
+  <footer>
+    <div class="footer-content">
+      <div class="footer-col">
+        <img class="footer-logo" src="C:\Users\navan\OneDrive\Pictures\vijay-img.png" alt="Vijay Connect logo">
+        <p style="font-size: 0.9rem; line-height: 1.6;">Experience clean, comfortable, and well-maintained Chennai taxi service for every city and outstation journey.</p>
+      </div>
+
+      <div class="footer-col">
+        <h4>Trips</h4>
+        <ul>
+          <li><a href="#">Oneway Trip</a></li>
+          <li><a href="#">Round Trip</a></li>
+          <li><a href="#">Hourly Rental</a></li>
+          <li><a href="#">Airport Taxi</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-col">
+        <h4>Cab Types</h4>
+        <ul>
+          <li><a href="#">Mini Hatchback</a></li>
+          <li><a href="#">Sedan Comfort</a></li>
+          <li><a href="#">SUV Premium</a></li>
+          <li><a href="#">Luxury Traveller</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-col">
+        <h4>Contact Us</h4>
+        <p style="font-size: 0.9rem; margin-bottom: 8px;"><i class="fa-solid fa-phone" style="color:var(--primary-color)"></i> +91 8056631317</p>
+        <p style="font-size: 0.9rem; margin-bottom: 8px;"><i class="fa-solid fa-envelope" style="color:var(--primary-color)"></i> contactvijayconnect@gmail.com</p>
+        <p style="font-size: 0.9rem;"><i class="fa-solid fa-location-dot" style="color:var(--primary-color)"></i> Chennai, Tamil Nadu, India</p>
+      </div>
+    </div>
+
+    <div class="copyright">
+      &copy; 2026 Vijay Connect Cabs. All rights reserved.
+    </div>
+  </footer>
+
+  <!-- ==================== JAVASCRIPT SLIDER LOGIC ==================== -->
+  <script>
+    // ===============================
+    // VIJAY CONNECT SETTINGS
+    // ===============================
+    const WEBSITE_NAME = "Vijay Connect";
+    const WHATSAPP_NUMBER = "https://whatsapp.com/channel/0029Vb9MATj0VycIZYww622B";
+    const CONTACT_PHONE = "+91 8056631317";
+    const CONTACT_EMAIL = "contactvijayconnect@gmail.com";
+    const LOGO_PATH = "c:\\Users\\navan\\CrossDevice\\V2315 (3)\\storage\\Pictures\\file_00000000d190820892113670460df928.png";
+
+    // ===============================
+    // CHENNAI DESTINATIONS
+    // ===============================
+    // Edit this one list to add, remove, or replace destination cards.
+    const destinations = [
+      { name: "Chennai Airport", image: "https://live.staticflickr.com/5810/21624386986_d7a268fa50_b.jpg", description: "Punctual taxi pickups and drop-offs for every Chennai flight." },
+      { name: "Marina Beach", image: "https://commons.wikimedia.org/wiki/Special:FilePath/Marina%20Beach%20in%20Chennai.jpg?width=1200", description: "Comfortable taxi rides to Chennai's iconic waterfront." },
+      { name: "Kapaleeshwarar Temple", image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSMYgppt4BTBqiFgJd5WYUvxTOhRYXaMv3y3R3uHkzbopxM0dLHipSjGLY&s=10", description: "Easy cab travel to Mylapore's historic temple district." },
+      { name: "Fort St. George", image: "https://media.mysuperhumanrace.com/upload/2022/03/1648192952623d6db883b69.jpg", description: "Reliable rides to Chennai's landmark historic fort." },
+      { name: "Government Museum Chennai", image: "https://upload.wikimedia.org/wikipedia/commons/6/66/Madras_museum_theatre_in_October_2007.jpg?utm_source=en.wikipedia.org&utm_campaign=index&utm_content=original", description: "Plan a relaxed taxi trip to the Egmore museum campus." },
+      { name: "Valluvar Kottam", image: "https://s7ap1.scene7.com/is/image/incredibleindia/valluvar-kottam-kodambakkam-chennai-tamil-nadu-2-attr-hero?qlt=82&ts=1726654785947", description: "Door-to-door cab service to this cultural Chennai landmark." },
+      { name: "San Thome Basilica", image: "https://s7ap1.scene7.com/is/image/incredibleindia/san-thome-basilica-chennai2-attr-hero?qlt=82&ts=1726654768684", description: "Comfortable rides to the historic cathedral by the coast." },
+      { name: "Besant Nagar / Elliot's Beach", image: "https://t3.ftcdn.net/jpg/01/27/26/32/240_F_127263288_uqBDkOOwZASP67KE8vSY6Tgeb0AwPIy9.jpg", description: "Beachside taxi rides for evenings, dining, and family visits." },
+      { name: "Guindy", image: "https://thumbs.dreamstime.com/b/guindy-national-park-chennai-tamil-nadu-forest-department-guindy-national-park-chennai-176007417.jpg", description: "Quick business, airport, and local cab connections." },
+      { name: "T. Nagar", image: "https://commons.wikimedia.org/wiki/Special:FilePath/T%20Nagar%20Chennai.jpg?width=1200", description: "Convenient taxi service for shopping and hotel transfers." },
+      { name: "Anna Nagar", image: "https://commons.wikimedia.org/wiki/Special:FilePath/Anna%20Nagar%20Tower.jpg?width=1200", description: "Reliable rides for homes, offices, and city plans." },
+      { name: "Adyar", image: "https://media.gettyimages.com/id/1997117298/photo/a-fisherman-casts-his-net-along-the-confluence-of-adyar-river-and-indian-ocean-at-the.jpg?s=612x612&w=0&k=20&c=hIuZM5TgYdQNsY3594jlU-byuX2AI455qd7jzO2SWoA=", description: "Comfortable south Chennai cab rides with local drivers." },
+      { name: "Velachery", image: "https://upload.wikimedia.org/wikipedia/commons/f/f8/Velachery_Railway_station_June_2010.jpg?utm_source=commons.wikimedia.org&utm_campaign=index&utm_content=original", description: "Fast taxi connections to the airport, OMR, and city centre." },
+      { name: "OMR", image: "https://thumbs.dreamstime.com/b/chennai-city-view-omr-perungudi-gated-community-apartments-chennai-city-view-omr-perungudi-gated-community-thoraipakkam-road-333009577.jpg", description: "Professional cabs for Chennai's busy IT corridor." },
+      { name: "ECR", image: "https://commons.wikimedia.org/wiki/Special:FilePath/East%20Coast%20Road%20Chennai.jpg?width=1200", description: "Comfortable coastal drives to resorts and weekend destinations." },
+      { name: "Mahabalipuram", image: "https://commons.wikimedia.org/wiki/Special:FilePath/Shore%20Temple%20Mahabalipuram.jpg?width=1200", description: "Heritage and beach travel with a dependable outstation cab." },
+      { name: "Kovalam", image: "https://t3.ftcdn.net/jpg/00/59/46/64/360_F_59466409_IjrcA9OXD4qVCBSFHsm87Dxl53rUNKsV.jpg", description: "Relaxed coastal taxi journeys south of Chennai." },
+      { name: "Muttukadu", image: "https://thumbs.dreamstime.com/b/muttukadu-boat-house-water-sport-facility-east-coast-road-chennai-india-sports-backwater-area-bay-bengal-215510218.jpg", description: "Easy family and leisure trips along the ECR." },
+      { name: "DakshinaChitra", image: "https://s7ap1.scene7.com/is/image/incredibleindia/dakshinachitra-museum-chennai-tamil-nadu-1-attr-hero?qlt=82&ts=1726655056460", description: "Plan a comfortable cultural outing by cab." },
+      { name: "MGM Dizzee World", image: "https://commons.wikimedia.org/wiki/Special:FilePath/MGM%20Dizzee%20World.jpg?width=1200", description: "Family-friendly taxi transfers with room for everyone." },
+      { name: "VGP Universal Kingdom", image: "https://c8.alamy.com/comp/D36AP3/vgp-universal-kingdom-the-best-theme-park-amusement-park-water-park-D36AP3.jpg", description: "Door-to-door rides for a fun ECR day out." },
+      { name: "Chennai Central Railway Station", image: "https://commons.wikimedia.org/wiki/Special:FilePath/Chennai%20Central%20Railway%20Station.jpg?width=1200", description: "On-time station pickups and drops across Chennai." },
+      { name: "Chennai Egmore Railway Station", image: "https://commons.wikimedia.org/wiki/Special:FilePath/Chennai%20Egmore%20Railway%20Station.jpg?width=1200", description: "Smooth rail transfers with luggage-friendly cabs." },
+      { name: "Tambaram", image: "https://commons.wikimedia.org/wiki/Special:FilePath/Tambaram%20railway%20station.jpg?width=1200", description: "Dependable suburban and airport taxi service." },
+      { name: "Sholinganallur", image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTJFL4wiAkXrLZycniOfeOqa93LCuT68AA2te1Nm9-2q8ClnYMylQ3PJGA_&s=10", description: "Daily office commutes and flexible city bookings." },
+      { name: "Siruseri", image: "https://images.trvl-media.com/place/553248635725824297/bc68c0ae-7428-495c-bff2-f0657aa8d6af.jpg", description: "Comfortable cabs for the southern IT corridor." },
+      { name: "Thiruvanmiyur", image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRggsEC6XZLSjsPHgb3w5tmjzBTPGKzW-wOdKMN5xpQxEVLya6KBLdcikhr&s=10", description: "Quick rides to homes, offices, and the coast." },
+      { name: "Porur", image: "https://img.hexahome.in/media/blogs/hexahome-blogs/porur-chennai/ch01en.webp", description: "West Chennai taxi service for work and family travel." }
+    ];
+
+    // 10 cab slides with smooth auto-scrolling every 2 seconds.
+    const slidesData = [
+      {
+        badge: "Swift Hatchback",
+        title: "Chennai City Taxi Booking",
+        notes: "Ideal for fast, economical daily travel across Chennai. Pocket-friendly and cozy.",
+        image: "https://images.unsplash.com/photo-1549399542-7e3f8b79c341?auto=format&fit=crop&w=1400&q=80"
+      },
+      {
+        badge: "Comfort Sedan",
+        title: "Executive Business Rides",
+        notes: "Spacious legroom and smooth suspension for your important corporate meetings.",
+        image: "https://images.unsplash.com/photo-1550355291-bbee04a92027?auto=format&fit=crop&w=1400&q=80"
+      },
+      {
+        badge: "Premium SUV 7-Seater",
+        title: "Family Trip to Ooty & Hills",
+        notes: "Heavy-duty power and extra comfort for hill station curves and luggage space.",
+        image: "https://images.unsplash.com/photo-1519641471654-76ce0107ad1b?auto=format&fit=crop&w=1400&q=80"
+      },
+      {
+        badge: "Airport Express",
+        title: "24x7 Airport Transfer",
+        notes: "Guaranteed on-time pickup and drop-off to avoid flight delays. Always punctual.",
+        image: "https://images.unsplash.com/photo-1503376780353-7e6692767b70?auto=format&fit=crop&w=1400&q=80"
+      },
+      {
+        badge: "Outstation Cruiser",
+        title: "Long Distance Intercity Travel",
+        notes: "Verified drivers & GPS tracking for hassle-free interstate and long routes.",
+        image: "https://images.unsplash.com/photo-1541899481282-d53bffe3c35d?auto=format&fit=crop&w=1400&q=80"
+      },
+      {
+        badge: "Eco Green Electric Cab",
+        title: "Zero Emission City Commute",
+        notes: "Travel clean and silent with our brand new range of EV electric taxies.",
+        image: "https://images.unsplash.com/photo-1563720223185-11003d516935?auto=format&fit=crop&w=1400&q=80"
+      },
+      {
+        badge: "Luxury VIP Fleet",
+        title: "Premium Wedding & Event Cabs",
+        notes: "Make a statement with top-tier luxury sedans for special occasions.",
+        image: "https://images.unsplash.com/photo-1502877338535-766e1452684a?auto=format&fit=crop&w=1400&q=80"
+      },
+      {
+        badge: "Tempo Traveller",
+        title: "Group Tour & Pilgrimage Trips",
+        notes: "Comfortable seating for 12+ passengers for temple visits and group outings.",
+        image: "https://images.unsplash.com/photo-1570125909232-eb263c188f7e?auto=format&fit=crop&w=1400&q=80"
+      },
+      {
+        badge: "Night Owl Cab",
+        title: "Safe & Secure Night Rides",
+        notes: "Emergency SOS and real-time live location sharing for midnight travels.",
+        image: "https://images.unsplash.com/photo-1511919884226-fd3cad34687c?auto=format&fit=crop&w=1400&q=80"
+      },
+      {
+        badge: "Hourly Rental Package",
+        title: "Flexible Shopping & City Package",
+        notes: "Keep the cab as long as you need with unlimited stops across town.",
+        image: "https://images.unsplash.com/photo-1542282088-72c9c27ed0cd?auto=format&fit=crop&w=1400&q=80"
+      }
+    ];
+
+    const sliderWrapper = document.getElementById('sliderWrapper');
+    const sliderDots = document.getElementById('sliderDots');
+    const slideCounter = document.getElementById('slideCounter');
+    const timerBar = document.getElementById('timerBar');
+
+    let currentIndex = 0;
+    const intervalTime = 2000; // 2 Seconds Auto Change
+    let slideTimer;
+
+    // Render Slides & Dots dynamically
+    function initSlider() {
+      slidesData.forEach((slide, index) => {
+        // Create Slide Element
+        const slideDiv = document.createElement('div');
+        slideDiv.classList.add('slide');
+        if (index === 0) slideDiv.classList.add('active');
+
+        slideDiv.innerHTML = `
+          <img src="${slide.image}" class="slide-img" alt="${slide.title}">
+          <div class="slide-overlay">
+            <span class="slide-badge">${slide.badge}</span>
+            <h1 class="slide-title">${slide.title}</h1>
+            <p class="slide-notes">${slide.notes}</p>
+            <div>
+              <a href="#fares" class="btn-download" style="display:inline-block; font-size:0.9rem;">View Package Fares</a>
+            </div>
+          </div>
+        `;
+        sliderWrapper.appendChild(slideDiv);
+
+        // Create Dot Element
+        const dot = document.createElement('div');
+        dot.classList.add('dot');
+        if (index === 0) dot.classList.add('active');
+        dot.addEventListener('click', () => goToSlide(index));
+        sliderDots.appendChild(dot);
+      });
+
+      startTimer();
+    }
+
+    function goToSlide(index) {
+      const slides = document.querySelectorAll('.slide');
+      const dots = document.querySelectorAll('.dot');
+
+      slides[currentIndex].classList.remove('active');
+      dots[currentIndex].classList.remove('active');
+
+      currentIndex = index;
+
+      slides[currentIndex].classList.add('active');
+      dots[currentIndex].classList.add('active');
+
+      slideCounter.textContent = `${currentIndex + 1} / ${slidesData.length}`;
+      resetTimer();
+    }
+
+    function nextSlide() {
+      const nextIndex = (currentIndex + 1) % slidesData.length;
+      goToSlide(nextIndex);
+    }
+
+    function startTimer() {
+      // Animate progress bar across 2000ms
+      timerBar.style.transition = 'none';
+      timerBar.style.width = '0%';
+      setTimeout(() => {
+        timerBar.style.transition = `width ${intervalTime}ms linear`;
+        timerBar.style.width = '100%';
+      }, 50);
+
+      slideTimer = setInterval(nextSlide, intervalTime);
+    }
+
+    function resetTimer() {
+      clearInterval(slideTimer);
+      startTimer();
+    }
+
+    function escapeHtml(value) {
+      return String(value).replace(/[&<>"']/g, (character) => ({
+        '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;'
+      }[character]));
+    }
+
+    function renderDestinations() {
+      const destinationGrid = document.getElementById('destinationGrid');
+      destinationGrid.innerHTML = destinations.map((destination) => `
+        <article class="destination-card">
+          <img class="destination-image" src="${destination.image}" alt="${escapeHtml(destination.name)}" loading="lazy">
+          <div class="destination-content">
+            <h3>${escapeHtml(destination.name)}</h3>
+            <p>${escapeHtml(destination.description)}</p>
+            <button class="btn-book destination-book" type="button" data-destination="${escapeHtml(destination.name)}">Book Taxi</button>
+          </div>
+        </article>
+      `).join('');
+
+      destinationGrid.querySelectorAll('.destination-book').forEach((button) => {
+        button.addEventListener('click', () => {
+          document.getElementById('destination').value = button.dataset.destination;
+          document.getElementById('booking').scrollIntoView({ behavior: 'smooth' });
+          document.getElementById('pickupLocation').focus();
+        });
+      });
+    }
+
+    function setupBookingForm() {
+      const bookingForm = document.getElementById('bookingForm');
+      const formStatus = document.getElementById('formStatus');
+      bookingForm.addEventListener('submit', (event) => {
+        event.preventDefault();
+        if (!bookingForm.checkValidity()) {
+          bookingForm.reportValidity();
+          return;
+        }
+        if (WHATSAPP_NUMBER === 'YOUR_NUMBER_HERE') {
+          formStatus.textContent = 'Set WHATSAPP_NUMBER at the top of this script before accepting bookings.';
+          return;
+        }
+
+        const formData = new FormData(bookingForm);
+        const message = [
+          `New ${WEBSITE_NAME} taxi booking request`,
+          `Customer Name: ${formData.get('customerName')}`,
+          `Mobile Number: ${formData.get('mobileNumber')}`,
+          `Pickup Location: ${formData.get('pickupLocation')}`,
+          `Destination: ${formData.get('destination')}`,
+          `Travel Date: ${formData.get('travelDate')}`,
+          `Travel Time: ${formData.get('travelTime')}`,
+          `Passengers: ${formData.get('passengers')}`,
+          `Taxi Type: ${formData.get('taxiType')}`,
+          `Additional Message: ${formData.get('additionalMessage') || 'None'}`
+        ].join('\n');
+        window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(message)}`, '_blank', 'noopener,noreferrer');
+        formStatus.textContent = 'Your WhatsApp booking request is ready to send.';
+      });
+    }
+
+    // Initialize slider on load
+    document.addEventListener('DOMContentLoaded', () => {
+      initSlider();
+      renderDestinations();
+      setupBookingForm();
+    });
+  </script>
+
+</body>
+</html>
